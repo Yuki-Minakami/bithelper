@@ -1,0 +1,82 @@
+*{
+    padding: 0px;
+    border: 0px;
+    margin: 0px;
+}
+.spanText{
+    font-size: 14px;
+    width: 40px;
+}
+
+a{
+    text-decoration:none;
+}
+.userInput{
+    border:1px gainsboro solid;
+    height:30px;
+    float: right;
+    -webkit-border-radius: 5px;
+}
+
+.button{
+    width: 50px;
+    height: 30px;
+    -webkit-border-radius: 5px;
+    font-size: 10px;
+}
+
+
+.mainContent{
+    margin-top: 50px;
+}
+.infoHeader{
+    background-color: grey;
+    color: white;
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    top: 0px;
+    border-bottom:1px grey solid;
+}
+.navigator{
+    float: left;
+    border: 1px black solid;
+}
+.navigatorImg{
+    float: left;
+    width: 20px;
+}
+
+.headerText{
+    line-height: 50px;
+    margin-left: 30px;
+}
+
+.logo{
+    margin-left: 10px;
+
+}
+
+.leftNav{
+    text-align: center;
+    width:300px;
+    height:500px;
+    border-right: 1px black solid;
+    float: left;
+    overflow: hidden;
+}
+
+.walletListTable{
+    overflow: hidden;
+    width: 290px;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+}
+
+.walletListTable td{
+    font-size: 14px;
+    color: skyblue;
+}

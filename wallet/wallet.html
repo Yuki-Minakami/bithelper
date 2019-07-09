@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="http://likaiboy.com/js/jquery.js"></script>
+    <script>window.$ = window.jQuery = require('../jquery.js');</script>
+    <script type="text/javascript" src="../js/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="../js/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="../css/wallet.css"/>
+</head>
+<body>
+<header class="loginErr"  style="color: red;text-align: center;display: none">
+    <span style="font-size: 12px">您需要登录才能使用完整功能</span>
+</header>
+
+<div class="navigator" style="width: 30%;border-right:1px black solid;height: 100%;float: left">
+<ul>
+    <li><a class="myWallet">我的钱包</a></li>
+    <li><a class="send">发送</a></li>
+    <li><a class="receive">接收</a></li>
+    <li><a class="create">创建新钱包</a></li>
+</ul>
+</div>
+
+
+
+<div class="container" style="width: 500px;float: left;margin-left: 20px">
+    <div class="myWallet hide">
+        <table id="walletList" style="text-align: center">
+            <tr>
+                <th>地址</th>
+                <th>余额</th>
+            </tr>
+        </table>
+    </div>
+
+    <div class="receive hide" style="width: 300px;height:100% ;text-align: center" >
+        <span class="title">share the address anywhere you need</span>
+        <div id="qrcode" style="width: 200px;height: 200px;margin-top:50px;margin-right: auto;margin-left: auto"></div>
+        <select class="walletListSelect">
+        </select>
+    </div>
+
+    <div class="send hide" style="width: 400px;height: 100%;text-align: center;">
+        <span class="title">Send BTC to other address</span>
+        <table style="text-align: left">
+            <tr>
+                <td><span>目标地址:</span></td>
+                <td><input type="text" class="walletInput"  id="address" style="width: 260px" placeholder="input the address"/></td>
+            </tr>
+            <tr>
+                <td><span>数额:</span></td>
+                <td>
+                    <input type="text" class="walletInput" id="amount" placeholder="amount to send" />
+                    <span>= $</span>
+                    <input type="text" class="walletInput" id="dollar" placeholder="dollar"/>
+                </td>
+            </tr>
+            <tr>
+                <td><span>输入密码：</span></td>
+                <td>
+                    <input type="password" class="walletInput" id="password" placeholder="钱包密码" />
+                </td>
+            </tr>
+            <tr>
+                <td>选择账户</td>
+                <td>
+                    <select class="walletListSelect"></select>
+                </td>
+            </tr>
+            <tr>
+                <td><span id="addrErr" style="display:none;color: red;font-size: 12px;">Invalid address</span></td>
+                <td><span id="amountErr" style="display:none;color: red;font-size: 12px;">send amount should >0.001BTC</span></td>
+            </tr>
+        </table>
+        <button style="" id="confirmSend">确定</button>
+
+    </div>
+
+    <div class="create hide" style="width: 400px;height: 100%;text-align: center">
+        <span class="title">创建一个新的钱包</span>
+        <table style="text-align: left;margin-top: 15px">
+            <tr>
+                <td>钱包名称：</td>
+                <td><input type="text" class="walletInput" style="width: 200px" placeholder="input wallet name"/></td>
+            </tr>
+            <tr>
+                <td>
+                    设置密码：
+                </td>
+                <td>
+                    <input type="password" id="pass1" class="walletInput" style="width: 200px" placeholder="input password"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    确认密码：
+                </td>
+                <td>
+                    <input type="password" id="pass2" class="walletInput" style="width: 200px" placeholder="confirm password"/>
+                </td>
+            </tr>
+        </table>
+        <span id = "passErr"style="display:none;color:red;font-size: 12px">两次输入的密码必须一致</span>
+        <button id="createWallet">确认</button>
+    </div>
+
+</div>
+<footer style=" font-size: 10px; color: skyblue; width: 100%;text-align: center;height: 20px ; position: absolute;  bottom: 0;">
+    <sapn> 版权所有<a target="_blank" style="color: skyblue" href="http://likaiboy.com"> Likaiboy.com</a></sapn>
+</footer>
+</body>
+<script type="text/javascript" src="../js/wallet.js"></script>
+
+</html>

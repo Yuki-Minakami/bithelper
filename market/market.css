@@ -1,0 +1,30 @@
+.table {
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+table {
+    max-width: 100%;
+    background-color: transparent;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table {
+    display: table;
+    border-collapse: separate;
+    border-spacing: 2px;
+    border-color: grey;
+}
+
+.table th {
+    font-weight: bold;
+}
+
+.table th, .table td {
+    padding: 8px;
+    line-height: 18px;
+    text-align: left;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}

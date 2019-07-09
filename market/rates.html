@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script>window.$ = window.jQuery = require('../js/jquery.js');</script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.ajax({
+                type : "GET",
+                url : "https://blockchain.info/ticker",
+                success: function(data){
+                    $.each(data,function(index,data){
+                        var tr = $("<tr></tr>");
+                        tr.append("<td>"+index+"</td>");
+                        console.log(index);
+                        $.each(data,function(i,detail){
+                           //console.log(data);
+                            tr.append("<td>"+detail+"</td>");
+                        });
+                        $("#ratesTable").append(tr);
+                    })
+                   //$(".rates").append(tr)
+
+                },
+                err:function(){
+                    alert("network error");
+                }
+            })
+        })
+    </script>
+</head>
+<body>
+<div class = "ratesDiv" style="margin-top: 60px;margin-left: 20px">
+    <span>实时汇率</span>
+    <table id="ratesTable" cellspacing="5" style="text-align: center">
+        <tr>
+            <th>货币</th>
+            <th>15m</th>
+            <th>last</th>
+            <th>buy</th>
+            <th>sell</th>
+            <th>symbol</th>
+        </tr>
+
+    </table>
+</div>
+</body>
+
+</html>

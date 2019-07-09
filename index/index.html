@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>BitHelper</title>
+    <link rel="stylesheet" href="../css/index.css" />
+  </head>
+  <script type="text/javascript" src="../js/echarts-all.js"></script>
+  <script>window.$ = window.jQuery = require('../js/jquery.js');</script>
+  <script type="text/javascript" src="../js/jquery.cookie.js"></script>
+  <script type="text/javascript" src="../js/lineChart.js"></script>
+
+  <script type="text/javascript" src="../datePicker/laydate.js" ></script>
+  <link rel="stylesheet" href="../datePicker/need/laydate.css"/>
+  <link rel="stylesheet" href="../datePicker/skins/default/laydate.css"/>
+
+  <script>
+
+    var ipcRenderer = require('electron').ipcRenderer;
+
+    var walletPageLoaded = false;
+
+    function getRates(){
+      $.ajax({
+        type:"GET",
+        url:"https://blockchain.info/ticker",
+        success:function(data){
+          var price = data.USD.last + "/" +　data.CNY.last;
+          console.log(price);
+          $(".rates").text(price);
+        }
+      });
+    }
+
+    $(document).ready(function(){
+      getRates();
+      getHistoryPrice("priceChart_index");
+
+      getHistoryPrice("priceChart_info","2016-03-01","2016-04-15");
+
+      getRatesInfo();
+
+      laydate({
+        elem: '#begin'
+      });
+      laydate({
+        elem: '#end'
+      });
+
+      $(".myWallet").on("click",function(){
+        ipcRenderer.send('getLoginStatus',"test");
+      })
+
+
+      setInterval(getRates,5000);
+    });
+
+    function loadHTML(path){
+      $(".mainContent").load(path);
+    }
+    function showRates(){
+      $(".ratesDiv").css("display","block");
+      $(".mainContent").css("display","none");
+    }
+
+    function step(){
+      self.location.href="../wallet/wallet.html"
+    }
+
+    function signIn(){
+      var email = $("#email").val();
+      var pass = $("#pass").val();
+      var obj ={
+        email:email,
+        pass:pass
+      }
+      ipcRenderer.send('login',obj);
+    }
+
+    ipcRenderer.on("login-reply",function(event,arg){
+      console.log(arg);
+      if(arg == "success"){
+        //TD
+        $(".login").css("display","none");
+        $("#loginErr").css("display","none");
+        alert("登录成功");
+      }else{
+        $("#loginErr").css("display","block");
+      }
+    });
+
+
+    ipcRenderer.on("getWalletListCallback",function(event,arg){
+      $(".walletList").css("display","block");
+      if(arg == "empty"){
+        var tr = $("<tr></tr>")
+        tr.append('<td class="walletItem" onclick="openWallet()">目前没有钱包，点击创建</td>');
+        $(".walletListTable").append(tr);
+        return;
+      }
+
+
+      $.each(arg,function(i,data){
+        var tr = $("<tr></tr>")
+        tr.append('<td class="walletItem" onclick="openWallet()">'+data+'</td>');
+        $(".walletListTable").append(tr);
+      })
+    })
+
+    function openWallet(){
+      if(walletPageLoaded){
+        return;
+      }else{
+        window.open("../wallet/wallet.html")
+        walletPageLoaded =true;
+      }
+
+    }
+    $("td").on("click",function(){
+      walletListOnClick($(this));
+    });
+
+    function walletListOnClick(item){
+      console.log(item.text());
+      //ipcRenderer.send('walletListOnClick',item.text());
+    }
+
+    function changeTab(tabname){
+      $(".mainContent").css("display","none");
+      $(".ratesInfo").css("display","none");
+      $(".priceInfo").css("display","none");
+      $(".blockchainInfo").css("display","none");
+      $("."+tabname).css("display","block");
+
+    }
+
+    function getUserTime(){
+      var begin = document.getElementById('begin').value;
+      var end = document.getElementById('end').value;
+      var beginDate = begin.substring(0,4) + begin.substring(5,7) + begin.substring(8,10);
+      var endDate = end.substring(0,4) + end.substring(5,7) + end.substring(8,10);
+
+      if(parseInt(beginDate)> parseInt(endDate)){
+        console.log("data format error")
+      }
+      else{
+        getHistoryPrice("priceChart_info",begin,end);
+      }
+    }
+
+    function getRatesInfo(){
+      $.ajax({
+        type : "GET",
+        url : "https://blockchain.info/ticker",
+        success: function(data){
+          $.each(data,function(index,data){
+            var tr = $("<tr></tr>");
+            tr.append("<td>"+index+"</td>");
+            console.log(index);
+            $.each(data,function(i,detail){
+              //console.log(data);
+              tr.append("<td>"+detail+"</td>");
+            });
+            $("#ratesTable").append(tr);
+          })
+          //$(".rates").append(tr)
+
+        },
+        err:function(){
+          alert("network error");
+        }
+      })
+    }
+
+
+
+
+    ipcRenderer.on("getLoginStatusCallback",function(event,arg) {
+      if(arg == "yes"){
+        loginStatus = true;
+        if(walletPageLoaded){
+          return
+        }else{
+          window.open("../wallet/wallet.html");
+          walletPageLoaded = true;
+        }
+
+      }else{
+        loginStatus = false;
+        alert("要使用钱包功能，请先登录");
+      }
+    })
+
+
+   function changeLeft(name){
+     if(name == "forget"){
+       $("div .forget").css("display","block");
+       $("div .login").css("display","none");
+       $("div .register").css("display","none");
+     }
+     if(name == "register"){
+       $("div .forget").css("display","none");
+       $("div .login").css("display","none");
+       $("div .register").css("display","block");
+     }
+     if(name == "login"){
+       $("div .forget").css("display","none");
+       $("div .login").css("display","block");
+       $("div .register").css("display","none");
+     }
+
+   }
+
+    ipcRenderer.on("forgetPassCallback",function(event,arg){
+      if(arg =="success"){
+        alert("密码已经发送，请查收邮件");
+      }else{
+        alert("找回密码失败");
+      }
+    });
+
+    ipcRenderer.on("registerCallback",function(event,arg){
+        if(arg == "success"){
+          alert("注册成功");
+        }
+    })
+
+    ipcRenderer.on("walletClosedCallback",function(event,arg){
+      console.log("windows cloede");
+      walletPageLoaded = false;
+    })
+
+
+  </script>
+  <header class="infoHeader">
+    <span class="logo" onclick='changeTab("mainContent")'>BitHelper</span>
+
+    <span class="headerText">汇率:</span>
+    <span class="headerText rates" onclick='changeTab("ratesInfo")'></span>
+    <span class="headerText" onclick='changeTab("blockchainInfo")'>区块链信息</span>
+    <span class="headerText" onclick='changeTab("priceInfo")'>价格走势</span>
+    <span class="headerText myWallet">我的钱包</span>
+  </header>
+  <body>
+
+  <div class="mainContent">
+
+    <div class="login leftNav">
+      <table style="margin-top:150px;height: 100px;width: 200px; margin-left: auto;margin-right: auto">
+        <tr>
+          <td><span class="spanText">email</span></td>
+          <td><input id="email" class = "userInput"type="text" placeholder="email"/></td>
+        </tr>
+        <tr>
+          <td><span class="spanText">password</span></td>
+          <td><input id="pass" class = "userInput" type="password" placeholder="password"/></td>
+        </tr>
+      </table>
+      <input style="" class="button" type="button" value="登录" onclick="signIn();"  />
+      <input style="" class="button" type="button" value="注册" onclick='changeLeft("register")' />
+      <span style="font-size: 10px;color:blue" onclick='changeLeft("forget")'>忘记密码？</span>
+      <span  id="loginErr" style="color: red;display: none;font-size: 12px">请检查用户名密码是否正确</span>
+    </div>
+
+    <div class="register leftNav" style="display:none">
+      <table style="margin-top:150px;height: 100px;width: 200px; margin-left: auto;margin-right: auto">
+        <tr>
+          <td><span class="spanText">邮箱</span></td>
+          <td><input id="Register-email" class = "userInput"type="text" placeholder="email"/></td>
+        </tr>
+        <tr>
+          <td><span class="spanText">输入密码</span></td>
+          <td><input id="Register-pass" class = "userInput" type="password" placeholder="password"/></td>
+        </tr>
+        <tr>
+          <td><span class="spanText">确认密码</span></td>
+          <td><input id="Register-pass2" class = "userInput" type="password" placeholder="password"/></td>
+        </tr>
+
+      </table>
+      <input style="" class="button" type="button" value="注册" id="registerButton" />
+      <input style="" class="button backToLogin" type="button" value="返回登录"  />
+
+    </div>
+
+    <div class="forget leftNav" style="display: none">
+      <table style="margin-top:150px;height: 100px;width: 200px; margin-left: auto;margin-right: auto">
+        <tr>
+          <td><span class="spanText">邮箱</span></td>
+          <td><input id="Forget-email" class = "userInput"type="text" placeholder="email"/></td>
+        </tr>
+      </table>
+      <input style="" class="button" type="button" value="找回密码" id="forgetPass" />
+      <input style="" class="button backToLogin" type="button" value="返回登录" />
+
+
+    </div>
+    <div class="walletList leftNav" style="display: none">
+      <span style="margin-top: 60px;display: block"> 钱包列表</span>
+      <table class="walletListTable" style="">
+
+      </table>
+    </div>
+
+
+    <div id="priceChart_index" style="float: right;width: 480px;height: 400px"></div>
+
+  </div>
+
+  <div class="ratesInfo" style="margin-top: 50px;display:none">
+    <span>实时汇率</span>
+    <table id="ratesTable" cellspacing="5" style="text-align: center">
+      <tr>
+        <th>货币</th>
+        <th>15m</th>
+        <th>last</th>
+        <th>buy</th>
+        <th>sell</th>
+        <th>symbol</th>
+      </tr>
+    </table>
+  </div>
+
+  <div class="priceInfo" style="margin-top: 50px;display:none">
+    <div id="priceChart_info" style="height:500px;width:800px;"></div>
+    <div style="width:50%;margin-left: auto;margin-right: auto">
+
+    </div>
+    <div style="width: 80%;margin-right: auto;margin-left: auto">
+      <span>开始日期</span>
+      <input type="text" id="begin"/>
+      <span>结束日期</span>
+      <input type="text" id="end"/>
+      <button onclick="getUserTime();">确定</button>
+      <span class="timeErr" style="color: red;display: none">时间格式错误</span>
+    </div>
+
+  </div>
+
+  <div class="blockchainInfo" style="margin-top: 50px;display:none">
+    <table class="">
+      <tbody><tr>
+        <td width="60%">开采区块数</td>
+        <td colspan="2">153</td>
+      </tr>
+      <tr>
+        <td width="60%">区块生成间隔</td>
+        <td colspan="2">9.41 (分钟)</td>
+      </tr>
+      <tr>
+        <td>新币开采量</td>
+        <td colspan="2"><span data-c="382500000000">3,825 BTC</span></td>
+      </tr>
+
+      <tr>
+        <td>交易费总量</td>
+        <td><span data-c="3404089202">34.04089202 BTC</span></td>
+        <td><a target="_blank" href="https://blockchain.info/charts/transaction-fees"><img src="../res/chart_bar.png" border="0"></a></td>
+      </tr>
+      <tr>
+        <td>交易次数</td>
+        <td>188710</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/n-transactions"><img src="../res/chart_bar.png" border="0"></a></td>
+      </tr>
+      <tr>
+        <td>转出总量</td>
+        <td><span data-c="260471180731975">2,604,711.80731975 BTC</span></td>
+        <td><a target="_blank" href="https://blockchain.info/charts/output-volume?daysAverageString=7"><img src="../res/chart_bar.png" border="0"></a></td>
+
+      </tr>
+      <tr>
+        <td>估计交易量</td>
+        <td><span data-c="19121469611898">191,214.69611898 BTC</span></td>
+        <td><a target="_blank" href="https://blockchain.info/charts/estimated-transaction-volume?daysAverageString=7"><img src="../res/chart_bar.png" border="0"></a></td>
+
+      </tr>
+      <tr>
+        <td>估计交易量 (USD)</td>
+        <td>81,639,114.51 USD</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/estimated-transaction-volume-usd?daysAverageString=7"><img src="../res/chart_bar.png" border="0"></a></td>
+      </tr>
+      <tr>
+        <th colspan="3">市场概览</th>
+      </tr>
+      <tr>
+        <td>市场汇率</td>
+        <td>$426.95 USD (加权平均)</td>
+        <td><a target="_blank" href="/https://blockchain.info/charts/market-price"><img src="../res/chart_bar.png" border="0"></a></td>
+
+      </tr>
+      <tr>
+        <td>总交易量</td>
+        <td colspan="2">$632,194.93 USD</td>
+      </tr>
+      <tr>
+        <td>总交易量</td>
+        <td colspan="2">1,480.72 BTC</td>
+      </tr>
+      <tr>
+        <th colspan="3">挖矿成本</th>
+      </tr>
+      <tr>
+        <td>总矿工收入</td>
+        <td colspan="2">$1,647,600.05</td>
+      </tr>
+      <tr>
+        <td>交易费收入占比</td>
+        <td colspan="2">0.88%</td>
+      </tr>
+      <tr>
+        <td>在总交易量中的占比</td>
+        <td>2.02 %</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/cost-per-transaction-percent"><img src="../res/chart_bar.png" border="0"></a></td>
+      </tr>
+      <tr>
+        <td>每次交易均摊成本</td>
+        <td>$8.73</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/cost-per-transaction"><img src="../res/chart_bar.png" border="0"></a></td>
+      </tr>
+      <tr>
+        <th colspan="3">算力与用电量</th>
+      </tr>
+      <tr>
+        <td>难度系数</td>
+        <td colspan="2">178,678,307,671.69</td>
+      </tr>
+      <tr>
+        <td>哈希计算速率</td>
+        <td>1,358,968,468.25 GH/s</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/hash-rate"><img src="../res/chart_bar.png" border="0"></a></td>
+      </tr>
+      </tbody></table>
+  </div>
+
+  <footer style=" font-size: 10px; color: skyblue; width: 100%;text-align: center;height: 20px ; position: absolute;  bottom: 0;">
+   <sapn> 版权所有<a target="_blank" style="color: skyblue" href="http://likaiboy.com"> Likaiboy.com</a></sapn>
+  </footer>
+  </body>
+<script type="text/javascript">
+  $("#forgetPass").on("click",function(){
+    console.log("找回密码");
+    var email = $("#Forget-email").val();
+    console.log("email is ",email);
+    ipcRenderer.send("forgetMail",email);
+  })
+
+  $("#registerButton").on("click",function(){
+    var pass1 = $("#Register-pass").val();
+    var pass2 = $("#Register-pass").val();
+    var email = $("#Register-email").val();
+    var obj = {
+      email:email,
+      pass:pass1
+    }
+    if(pass1 == pass2 && email){
+      ipcRenderer.send("register",obj)
+    }
+  })
+  $(".backToLogin").on("click",function(){
+    changeLeft("login");
+  })
+
+
+
+</script>
+</html>

@@ -1,0 +1,6 @@
+With the development of economy and society, the order of present economy is being challenged, people is losing their faith in Central Bank with constant economic crises. The 24h-running banknote printing machine, bubbles in stock market, and the soaring up house price. They are hurting normal people’s living standards.
+Then the Bitcoin be, brings a huge earthquake to economy.
+This project focuses on bitcoin and its trade, the target of this system is to achieve a easy way to help people use bitcoin easily, which contains the following contents:
+P2P trade of bitcoin;
+Get the status of blockchain;
+Get the history price of bitcoin; drawing charts with visualization tools.

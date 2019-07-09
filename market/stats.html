@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="market.css" rel="stylesheet"/>
+    <script>window.$ = window.jQuery = require('../js/jquery.js');</script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            console.log("stats");
+            $.ajax({
+              type:"GET",
+              url:"https://blockchain.info/stats?format=json",
+              success:function(data){
+              }
+            })
+        });
+    </script>
+</head>
+<body>
+<div class="content"></div>
+
+<table class="table table-striped">
+    <tbody><tr>
+        <td width="60%">开采区块数</td>
+        <td colspan="2">153</td>
+    </tr>
+    <tr>
+        <td width="60%">区块生成间隔</td>
+        <td colspan="2">9.41 (分钟)</td>
+    </tr>
+    <tr>
+        <td>新币开采量</td>
+        <td colspan="2"><span data-c="382500000000">3,825 BTC</span></td>
+    </tr>
+
+    <tr>
+        <td>交易费总量</td>
+        <td><span data-c="3404089202">34.04089202 BTC</span></td>
+        <td><a target="_blank" href="https://blockchain.info/charts/transaction-fees"><img src="../res/chart_bar.png" border="0"></a></td>
+    </tr>
+    <tr>
+        <td>交易次数</td>
+        <td>188710</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/n-transactions"><img src="../res/chart_bar.png" border="0"></a></td>
+    </tr>
+    <tr>
+        <td>转出总量</td>
+        <td><span data-c="260471180731975">2,604,711.80731975 BTC</span></td>
+        <td><a target="_blank" href="https://blockchain.info/charts/output-volume?daysAverageString=7"><img src="../res/chart_bar.png" border="0"></a></td>
+
+    </tr>
+    <tr>
+        <td>估计交易量</td>
+        <td><span data-c="19121469611898">191,214.69611898 BTC</span></td>
+        <td><a target="_blank" href="https://blockchain.info/charts/estimated-transaction-volume?daysAverageString=7"><img src="../res/chart_bar.png" border="0"></a></td>
+
+    </tr>
+    <tr>
+        <td>估计交易量 (USD)</td>
+        <td>81,639,114.51 USD</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/estimated-transaction-volume-usd?daysAverageString=7"><img src="../res/chart_bar.png" border="0"></a></td>
+    </tr>
+    <tr>
+        <th colspan="3">市场概览</th>
+    </tr>
+    <tr>
+        <td>市场汇率</td>
+        <td>$426.95 USD (加权平均)</td>
+        <td><a target="_blank" href="/https://blockchain.info/charts/market-price"><img src="../res/chart_bar.png" border="0"></a></td>
+
+    </tr>
+    <tr>
+        <td>总交易量</td>
+        <td colspan="2">$632,194.93 USD</td>
+    </tr>
+    <tr>
+        <td>总交易量</td>
+        <td colspan="2">1,480.72 BTC</td>
+    </tr>
+    <tr>
+        <th colspan="3">挖矿成本</th>
+    </tr>
+    <tr>
+        <td>总矿工收入</td>
+        <td colspan="2">$1,647,600.05</td>
+    </tr>
+    <tr>
+        <td>交易费收入占比</td>
+        <td colspan="2">0.88%</td>
+    </tr>
+    <tr>
+        <td>在总交易量中的占比</td>
+        <td>2.02 %</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/cost-per-transaction-percent"><img src="../res/chart_bar.png" border="0"></a></td>
+    </tr>
+    <tr>
+        <td>每次交易均摊成本</td>
+        <td>$8.73</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/cost-per-transaction"><img src="../res/chart_bar.png" border="0"></a></td>
+    </tr>
+    <tr>
+        <th colspan="3">算力与用电量</th>
+    </tr>
+    <tr>
+        <td>难度系数</td>
+        <td colspan="2">178,678,307,671.69</td>
+    </tr>
+    <tr>
+        <td>哈希计算速率</td>
+        <td>1,358,968,468.25 GH/s</td>
+        <td><a target="_blank" href="https://blockchain.info/charts/hash-rate"><img src="../res/chart_bar.png" border="0"></a></td>
+    </tr>
+    </tbody></table>
+
+</body>
+<script type="text/javascript" src="http://likaiboy.com/js/jquery.js"></script>
+</html>

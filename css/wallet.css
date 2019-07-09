@@ -1,0 +1,35 @@
+li{
+    list-style-type:none
+}
+.walletInput{
+    -webkit-border-radius: 5px;
+    height:20px;
+    width: 100px;
+
+}
+
+button{
+    width: 40px;
+    height: 20px;
+    -webkit-border-radius: 5px;
+    background-color: whitesmoke;
+    margin-top: 5px;
+}
+
+.title{
+    font-size: 24px;
+    font-weight: bolder;
+}
+
+
+/*.container .create, .container .send, .container .address */
+
+.hide{
+    display:none;
+
+}
+
+#walletList td{
+    font-size: 14px;
+    color:skyblue;
+}
