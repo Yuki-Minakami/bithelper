@@ -26,7 +26,7 @@
     "electron": "^5.0.5"
   },
   "dependencies": {
-    "bitgo": "^1.4.0",
+    "bitgo": "^16.1.0",
     "mongodb": "^1.4.40",
     "monk": "^1.0.1",
     "nodemailer": "^2.3.2"
